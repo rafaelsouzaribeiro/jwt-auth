@@ -34,7 +34,7 @@ func (c *Credential) CreateToken(username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"username": username,
-			"exp":      time.Now().Add(time.Hour * time.Duration(c.ExpireIn)).Unix(),
+			"exp":      time.Now().Add(time.Second * time.Duration(c.ExpireIn)).Unix(),
 		})
 
 	tokenString, err := token.SignedString(c.SecretKey)
@@ -59,4 +59,11 @@ func (c *Credential) VerifyToken(tokenString string) error {
 	}
 
 	return nil
+}
+
+func (c *Credential) TokenExpired(tokenString string) bool {
+	token, _ := jwt.Parse(tokenString, nil)
+	claims, _ := token.Claims.(jwt.MapClaims)
+	expirationTime := time.Unix(int64(claims["exp"].(float64)), 0)
+	return expirationTime.Before(time.Now())
 }
