@@ -80,7 +80,7 @@ func (c *Credential) JwtStreamInterceptor(token string) func(srv interface{}, ss
 			return status.Error(codes.Unauthenticated, "Token inválido")
 		}
 
-		if !c.TokenExpired(token) {
+		if c.TokenExpired(token) {
 			return status.Error(codes.Unauthenticated, "Token Expirou")
 		}
 
