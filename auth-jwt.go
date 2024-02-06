@@ -72,7 +72,7 @@ func (c *Credential) TokenExpired(tokenString string) bool {
 }
 
 // jwtStreamInterceptor é o interceptor gRPC para autenticação JWT em streams
-func (c *Credential) jwtStreamInterceptor(token string) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+func jwtStreamInterceptor(token string, c *Credential) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		err := c.VerifyToken(token)
 
