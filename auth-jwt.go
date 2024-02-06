@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Credential struct {
@@ -66,4 +69,22 @@ func (c *Credential) TokenExpired(tokenString string) bool {
 	claims, _ := token.Claims.(jwt.MapClaims)
 	expirationTime := time.Unix(int64(claims["exp"].(float64)), 0)
 	return expirationTime.Before(time.Now())
+}
+
+// jwtStreamInterceptor é o interceptor gRPC para autenticação JWT em streams
+func (c *Credential) jwtStreamInterceptor(token string) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		err := c.VerifyToken(token)
+
+		if err != nil {
+			return status.Error(codes.Unauthenticated, "Token inválido")
+		}
+
+		if !c.TokenExpired(token) {
+			return status.Error(codes.Unauthenticated, "Token Expirou")
+		}
+
+		// Se não houver erro, chame o manipulador de chamada de streaming
+		return handler(srv, ss)
+	}
 }
