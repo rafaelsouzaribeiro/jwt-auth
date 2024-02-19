@@ -10,14 +10,14 @@ import (
 
 func TestNewCredentialTime(t *testing.T) {
 	c, err := NewCredential(0, "secret")
-	assert.Equal(t, errors.New("o tempo de expiração deve ser maior que zero"), err)
+	assert.Equal(t, errors.New("expiration time must be greater than zero"), err)
 	assert.Nil(t, c)
 
 }
 
 func TestNewCredentialSecret(t *testing.T) {
 	c, err := NewCredential(60, "")
-	assert.Equal(t, errors.New("a chave secreta não pode estar vazia"), err)
+	assert.Equal(t, errors.New("the secret key cannot be empty"), err)
 	assert.Nil(t, c)
 }
 

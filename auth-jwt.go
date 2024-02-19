@@ -60,7 +60,7 @@ func (c *Credential) VerifyToken(tokenString string) error {
 	}
 
 	if !token.Valid {
-		return status.Error(codes.Unauthenticated, "Token inválido")
+		return status.Error(codes.Unauthenticated, "Invalid token")
 	}
 
 	return nil
@@ -80,11 +80,11 @@ func (c *Credential) JwtStreamInterceptor(token string) func(srv interface{}, ss
 		err := c.VerifyToken(token)
 
 		if err != nil {
-			return status.Error(codes.Unauthenticated, "Token inválido")
+			return status.Error(codes.Unauthenticated, "Invalid token")
 		}
 
 		if c.TokenExpired(token) {
-			return status.Error(codes.Unauthenticated, "Token Expirou")
+			return status.Error(codes.Unauthenticated, "Token Expired")
 		}
 
 		// Se não houver erro, chame o manipulador de chamada de streaming
@@ -98,11 +98,11 @@ func (c *Credential) JwtUnaryInterceptor(token string) grpc.UnaryServerIntercept
 		err := c.VerifyToken(token)
 
 		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, "Token inválido: "+err.Error())
+			return nil, status.Error(codes.Unauthenticated, "Invalid token: "+err.Error())
 		}
 
 		if c.TokenExpired(token) {
-			return nil, status.Error(codes.Unauthenticated, "Token Expirou")
+			return nil, status.Error(codes.Unauthenticated, "Token Expired")
 		}
 
 		// If no errors, proceed with the unary handler
