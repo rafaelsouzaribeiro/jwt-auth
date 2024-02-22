@@ -9,20 +9,20 @@ import (
 )
 
 func TestNewCredentialTime(t *testing.T) {
-	c, err := NewCredential(0, "secret")
+	c, err := NewCredential(0, "secret", nil)
 	assert.Equal(t, errors.New("expiration time must be greater than zero"), err)
 	assert.Nil(t, c)
 
 }
 
 func TestNewCredentialSecret(t *testing.T) {
-	c, err := NewCredential(60, "")
+	c, err := NewCredential(60, "", nil)
 	assert.Equal(t, errors.New("the secret key cannot be empty"), err)
 	assert.Nil(t, c)
 }
 
 func TestVeridyToken(t *testing.T) {
-	c, err := NewCredential(60, "secret")
+	c, err := NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
 	token, err := c.CreateToken("username")
@@ -38,7 +38,7 @@ func TestVeridyToken(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	c, err := NewCredential(60, "secret")
+	c, err := NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
 	token, err := c.CreateToken("username")
@@ -48,7 +48,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestTokenExpired(t *testing.T) {
-	c, err := NewCredential(3, "secret")
+	c, err := NewCredential(3, "secret", nil)
 	assert.Nil(t, err)
 
 	token, err := c.CreateToken("username")

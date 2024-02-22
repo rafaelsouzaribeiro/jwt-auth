@@ -14,11 +14,12 @@ import (
 )
 
 type Credential struct {
-	SecretKey []byte
-	ExpireIn  int
+	SecretKey      []byte
+	ExpireIn       int
+	AllowedMethods []string
 }
 
-func NewCredential(Expire int, SecretKey string) (*Credential, error) {
+func NewCredential(Expire int, SecretKey string, AllowedMethods []string) (*Credential, error) {
 	if Expire <= 0 {
 		return nil, errors.New("expiration time must be greater than zero")
 	}
@@ -28,8 +29,9 @@ func NewCredential(Expire int, SecretKey string) (*Credential, error) {
 	}
 
 	c := &Credential{
-		SecretKey: []byte(SecretKey),
-		ExpireIn:  Expire,
+		SecretKey:      []byte(SecretKey),
+		ExpireIn:       Expire,
+		AllowedMethods: AllowedMethods,
 	}
 
 	return c, nil
@@ -73,7 +75,6 @@ func (c *Credential) TokenExpired(tokenString string) bool {
 	return expirationTime.Before(time.Now())
 }
 
-// jwtStreamInterceptor é o interceptor gRPC para autenticação JWT em streams
 func (c *Credential) JwtStreamInterceptor(token string) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 
@@ -87,12 +88,10 @@ func (c *Credential) JwtStreamInterceptor(token string) func(srv interface{}, ss
 			return status.Error(codes.Unauthenticated, "Token Expired")
 		}
 
-		// Se não houver erro, chame o manipulador de chamada de streaming
 		return handler(srv, ss)
 	}
 }
 
-// JwtUnaryInterceptor é o interceptor gRPC para autenticação JWT em unary
 func (c *Credential) JwtUnaryInterceptor(token string) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		err := c.VerifyToken(token)
@@ -111,6 +110,14 @@ func (c *Credential) JwtUnaryInterceptor(token string) grpc.UnaryServerIntercept
 }
 
 func (i *Credential) StreamInterceptorBearer(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+
+	// Extracts the service and method name
+	_, methodName := extractServiceMethod(info.FullMethod)
+
+	if !contains(i.AllowedMethods, methodName) {
+		return handler(srv, ss)
+	}
+
 	token, err := GetToken(ss.Context())
 
 	if err != nil {
@@ -127,6 +134,13 @@ func (i *Credential) StreamInterceptorBearer(srv interface{}, ss grpc.ServerStre
 }
 
 func (i *Credential) UnaryInterceptorBearer(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+
+	// Extracts the service and method name
+	_, methodName := extractServiceMethod(info.FullMethod)
+
+	if !contains(i.AllowedMethods, methodName) {
+		return handler(ctx, req)
+	}
 
 	token, err := GetToken(ctx)
 
@@ -163,4 +177,24 @@ func GetToken(ctx context.Context) (string, error) {
 
 	return parts[1], nil
 
+}
+
+func extractServiceMethod(fullMethod string) (string, string) {
+	parts := strings.Split(fullMethod, "/")
+
+	if len(parts) != 3 {
+		return "", ""
+	}
+
+	// 1 - Service Name, 2 - Method Name
+	return parts[1], parts[2]
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }
