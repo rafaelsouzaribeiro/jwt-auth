@@ -14,12 +14,12 @@ import (
 )
 
 type Credential struct {
-	SecretKey      []byte
-	ExpireIn       int
-	AllowedMethods []string
+	SecretKey     []byte
+	ExpireIn      int
+	DeniedMethods []string
 }
 
-func NewCredential(Expire int, SecretKey string, AllowedMethods []string) (*Credential, error) {
+func NewCredential(Expire int, SecretKey string, DeniedMethods []string) (*Credential, error) {
 	if Expire <= 0 {
 		return nil, errors.New("expiration time must be greater than zero")
 	}
@@ -29,9 +29,9 @@ func NewCredential(Expire int, SecretKey string, AllowedMethods []string) (*Cred
 	}
 
 	c := &Credential{
-		SecretKey:      []byte(SecretKey),
-		ExpireIn:       Expire,
-		AllowedMethods: AllowedMethods,
+		SecretKey:     []byte(SecretKey),
+		ExpireIn:      Expire,
+		DeniedMethods: DeniedMethods,
 	}
 
 	return c, nil
@@ -114,7 +114,7 @@ func (i *Credential) StreamInterceptorBearer(srv interface{}, ss grpc.ServerStre
 	// Extracts the service and method name
 	_, methodName := extractServiceMethod(info.FullMethod)
 
-	if !contains(i.AllowedMethods, methodName) {
+	if contains(i.DeniedMethods, methodName) {
 		return handler(srv, ss)
 	}
 
@@ -138,7 +138,7 @@ func (i *Credential) UnaryInterceptorBearer(ctx context.Context, req interface{}
 	// Extracts the service and method name
 	_, methodName := extractServiceMethod(info.FullMethod)
 
-	if !contains(i.AllowedMethods, methodName) {
+	if contains(i.DeniedMethods, methodName) {
 		return handler(ctx, req)
 	}
 
