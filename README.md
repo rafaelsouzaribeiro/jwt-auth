@@ -1,4 +1,4 @@
-<strong>Version: v1.10.0</strong>
+<strong>Version: v1.10.0</strong><br />
 <strong>How to create a token?</strong><br />
 
     
