@@ -52,5 +52,5 @@
     token, err := cre.CreateToken(username)
     err := cre.VerifyToken(token)
     	if cre.TokenExpired(token) {
-			return status.Error(codes.Unauthenticated, "Token Expired")
+			
 		}
