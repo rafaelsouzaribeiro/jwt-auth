@@ -4,11 +4,13 @@
 	cre, err := authjwt.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 
 	token, err := cre.CreateToken(username)
 
 	if err != nil {
-		return "", err
+		panic(err)
 	}
+
+<strong>How to add an interceptor in grpc?</strong><br />    
