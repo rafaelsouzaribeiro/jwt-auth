@@ -1,7 +1,7 @@
 <strong>Version: v1.10.0</strong><br />
 <strong>How to create a token?</strong><br />
 
-    
+  <pre>  
 	cre, err := authjwt.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
@@ -13,6 +13,7 @@
 	if err != nil {
 		panic(err)
 	}
+	</pre>
 
 <strong>How to add an interceptor in grpc?</strong><br />  
 <strong>This example takes Bearer Token Authentication and skips token validation for functions login,loginAdm</strong><br />  
