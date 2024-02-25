@@ -1,7 +1,7 @@
 <strong>Version: v1.10.0</strong><br />
 <strong>How to create a token?</strong><br />
 
-  <pre>  
+  ```go 
 	cre, err := authjwt.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
@@ -13,11 +13,12 @@
 	if err != nil {
 		panic(err)
 	}
-	</pre>
+```
 
 <strong>How to add an interceptor in grpc?</strong><br />  
 <strong>This example takes Bearer Token Authentication and skips token validation for functions login,loginAdm</strong><br />  
 
+  ```go 
 	c, errs := authjwt.NewCredential(3600, secretkey, []string{"login", "loginAdm"})
 
 	if err != nil {
@@ -28,9 +29,10 @@
 		grpc.UnaryInterceptor(c.UnaryInterceptorBearer),
 		grpc.StreamInterceptor(c.StreamInterceptorBearer),
 	)
-
+```
 <strong>How to add an interceptor in grpc? passing the token as a parameter</strong><br />   
 
+  ```go
 	cre, err := authjwt.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
@@ -48,11 +50,14 @@
 		grpc.StreamInterceptor(c.JwtStreamInterceptor(token)),
 	)
 
+  ```
  
 <strong>Methods for http</strong><br />      
 
+  ```go
     token, err := cre.CreateToken(username)
     err := cre.VerifyToken(token)
     	if cre.TokenExpired(token) {
 			
 		}
+		  ```
