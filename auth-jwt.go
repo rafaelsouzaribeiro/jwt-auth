@@ -37,12 +37,13 @@ func NewCredential(Expire int, SecretKey string, DeniedMethods []string) (*Crede
 	return c, nil
 }
 
-func (c *Credential) CreateToken(username string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"username": username,
-			"exp":      time.Now().Add(time.Second * time.Duration(c.ExpireIn)).Unix(),
-		})
+func (c *Credential) CreateToken(claims map[string]interface{}) (string, error) {
+	// Ensure mandatory claims like exp are present
+	if _, ok := claims["exp"]; !ok {
+		claims["exp"] = time.Now().Add(time.Second * time.Duration(c.ExpireIn)).Unix() // Default expiration (1 hour)
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
 
 	tokenString, err := token.SignedString(c.SecretKey)
 	if err != nil {
@@ -51,6 +52,22 @@ func (c *Credential) CreateToken(username string) (string, error) {
 
 	return tokenString, nil
 }
+
+// Deprecated
+// func (c *Credential) CreateToken(username string) (string, error) {
+// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
+// 		jwt.MapClaims{
+// 			"username": username,
+// 			"exp":      time.Now().Add(time.Second * time.Duration(c.ExpireIn)).Unix(),
+// 		})
+
+// 	tokenString, err := token.SignedString(c.SecretKey)
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	return tokenString, nil
+// }
 
 func (c *Credential) VerifyToken(tokenString string) error {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

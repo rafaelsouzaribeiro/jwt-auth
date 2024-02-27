@@ -25,7 +25,11 @@ func TestVeridyToken(t *testing.T) {
 	c, err := NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
-	token, err := c.CreateToken("username")
+	claims := map[string]interface{}{
+		"username": "Rafael",
+	}
+
+	token, err := c.CreateToken(claims)
 	assert.Nil(t, err)
 	assert.NotNil(t, token)
 
@@ -41,7 +45,10 @@ func TestCreate(t *testing.T) {
 	c, err := NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
-	token, err := c.CreateToken("username")
+	claims := map[string]interface{}{
+		"username": "Rafael",
+	}
+	token, err := c.CreateToken(claims)
 	assert.Nil(t, err)
 	assert.NotNil(t, token)
 
@@ -51,7 +58,10 @@ func TestTokenExpired(t *testing.T) {
 	c, err := NewCredential(3, "secret", nil)
 	assert.Nil(t, err)
 
-	token, err := c.CreateToken("username")
+	claims := map[string]interface{}{
+		"username": "Rafael",
+	}
+	token, err := c.CreateToken(claims)
 	assert.Nil(t, err)
 	assert.NotNil(t, token)
 
