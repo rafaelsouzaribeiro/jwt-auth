@@ -1,3 +1,17 @@
+
+<strong>Version: v1.11.0</strong><br />
+<strong>Update of the new CreateToken</strong><br />
+	
+```go 	
+	// pass multiple data
+	claims := map[string]interface{}{
+		"username": username,
+		 // ... other claims
+	}
+
+	token, err := cre.CreateToken(claims)
+```
+
 <strong>Version: v1.10.0</strong><br />
 <strong>How to create a token?</strong><br />
 
