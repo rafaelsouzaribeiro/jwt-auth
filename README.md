@@ -1,5 +1,51 @@
+<strong>Version: v1.12.0</strong><br />
+<strong>Methods for http getting the bearer token and validating</strong><br />      
 
-<strong>Version: v1.11.0</strong><br />
+  ```go
+ package main
+
+import (
+	"fmt"
+	"net/http"
+
+	authjwt "github.com/rafaelsouzaribeiro/auth-jwt"
+)
+
+func main() {
+
+	mx := http.NewServeMux()
+	cre, err := authjwt.NewCredential(3600, "secretkey", nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Protected routes
+	mx.HandleFunc("/route1", cre.AuthMiddleware(rota1Handler))
+	mx.HandleFunc("/route2", cre.AuthMiddleware(rota2Handler))
+
+	// Public route
+	mx.HandleFunc("/public-route", rotaPublicaHandler)
+
+	http.ListenAndServe(":8080", mx)
+}
+
+func rota1Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Token-protected Route 1")
+}
+
+func rota2Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Token-protected Route 2")
+}
+
+func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Public route accessible without token")
+}
+
+
+```
+
+<strong>Version: v1.11.0 or latest</strong><br />
 <strong>Update of the new CreateToken</strong><br />
 	
 ```go 	
@@ -66,48 +112,12 @@
 
   ```
  
-<strong>Methods for http getting the bearer token and validating</strong><br />      
+<strong>Methods for http</strong><br />      
 
   ```go
- package main
-
-import (
-	"fmt"
-	"net/http"
-
-	authjwt "github.com/rafaelsouzaribeiro/auth-jwt"
-)
-
-func main() {
-
-	mx := http.NewServeMux()
-	cre, err := authjwt.NewCredential(3600, "secretkey", nil)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// Protected routes
-	mx.HandleFunc("/route1", cre.AuthMiddleware(rota1Handler))
-	mx.HandleFunc("/route2", cre.AuthMiddleware(rota2Handler))
-
-	// Public route
-	mx.HandleFunc("/public-route", rotaPublicaHandler)
-
-	http.ListenAndServe(":8080", mx)
-}
-
-func rota1Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Token-protected Route 1")
-}
-
-func rota2Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Token-protected Route 2")
-}
-
-func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Public route accessible without token")
-}
-
-
+    token, err := cre.CreateToken(username)
+    err := cre.VerifyToken(token)
+    	if cre.TokenExpired(token) {
+			
+		}
 		  ```
