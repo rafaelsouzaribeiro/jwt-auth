@@ -3,6 +3,8 @@ package authjwt
 import (
 	"context"
 	"errors"
+	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
@@ -173,6 +175,22 @@ func (i *Credential) UnaryInterceptorBearer(ctx context.Context, req interface{}
 
 	// Continue with the handler if authentication is successful
 	return handler(ctx, req)
+}
+
+func (c *Credential) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		token := strings.Replace(r.Header.Get("Authorization"), "Bearer ", "", -1)
+		err := c.VerifyToken(token)
+
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintf(w, "Access denied: invalid token")
+			return
+		}
+
+		next(w, r)
+	}
 }
 
 func GetToken(ctx context.Context) (string, error) {
