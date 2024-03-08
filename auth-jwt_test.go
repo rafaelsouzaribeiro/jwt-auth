@@ -2,6 +2,7 @@ package authjwt
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -69,5 +70,36 @@ func TestTokenExpired(t *testing.T) {
 
 	time.Sleep(4 * time.Second)
 	assert.True(t, c.TokenExpired(token))
+
+}
+
+func TestExtracClaims(t *testing.T) {
+	cre, err := NewCredential(1, "secretkey", nil)
+	assert.Nil(t, err)
+	assert.NotNil(t, cre)
+
+	claims := map[string]interface{}{
+		"lastname":  "Fernando",
+		"firstname": "Rafael",
+		// ... other claims
+	}
+
+	token, err := cre.CreateToken(claims)
+	assert.Nil(t, err)
+	assert.NotNil(t, token)
+
+	claims, err = cre.ExtractClaims(token)
+	assert.Nil(t, err)
+	assert.NotNil(t, claims)
+
+	if claims["lastname"] != "Fernando" {
+		t.Errorf("incorrect value")
+	}
+
+	if claims["firstname"] != "Rafael" {
+		t.Errorf("incorrect value")
+	}
+
+	println(fmt.Sprint(claims["lastname"]), fmt.Sprint(claims["firstname"]))
 
 }
