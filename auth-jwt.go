@@ -39,6 +39,18 @@ func NewCredential(Expire int, SecretKey string, DeniedMethods []string) (*Crede
 	return c, nil
 }
 
+func (c *Credential) ExtractClaims(tokenStr string) (jwt.MapClaims, error) {
+	token, err := c.ParseJWT(tokenStr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	return claims, nil
+}
+
 func (c *Credential) CreateToken(claims map[string]interface{}) (string, error) {
 	// Ensure mandatory claims like exp are present
 	if _, ok := claims["exp"]; !ok {
@@ -71,10 +83,15 @@ func (c *Credential) CreateToken(claims map[string]interface{}) (string, error) 
 // 	return tokenString, nil
 // }
 
-func (c *Credential) VerifyToken(tokenString string) error {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func (c *Credential) ParseJWT(tokenString string) (*jwt.Token, error) {
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return c.SecretKey, nil
 	})
+}
+
+func (c *Credential) VerifyToken(tokenString string) error {
+
+	token, err := c.ParseJWT(tokenString)
 
 	if err != nil {
 		return err
