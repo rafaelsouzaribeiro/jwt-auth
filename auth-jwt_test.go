@@ -2,7 +2,6 @@ package authjwt
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 	"time"
 
@@ -99,7 +98,5 @@ func TestExtracClaims(t *testing.T) {
 	if claims["firstname"] != "Rafael" {
 		t.Errorf("incorrect value")
 	}
-
-	println(fmt.Sprint(claims["lastname"]), fmt.Sprint(claims["firstname"]))
 
 }
