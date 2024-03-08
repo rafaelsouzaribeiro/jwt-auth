@@ -1,3 +1,21 @@
+<strong>Version: v1.13.0</strong><br />
+<strong>Added ExtractClaims method</strong><br /> 
+ ```go
+
+	cre, err := authjwt.NewCredential(1, "secretkey", nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	claims, err = cre.ExtractClaims(token)
+
+	if err != nil {
+		panic(err)
+	}
+
+	println(fmt.Sprint(claims["lastname"]), fmt.Sprint(claims["firstname"]))
+```
 <strong>Version: v1.12.0</strong><br />
 <strong>Methods for http getting the bearer token and validating</strong><br />      
 
