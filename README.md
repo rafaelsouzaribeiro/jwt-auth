@@ -16,7 +16,7 @@
 
 	println(fmt.Sprint(claims["lastname"]), fmt.Sprint(claims["firstname"]))
 ```
-<strong>Version: v1.12.0</strong><br />
+<strong>Version: v1.12.0 or latest</strong><br />
 <strong>Methods for http getting the bearer token and validating</strong><br />      
 
   ```go
