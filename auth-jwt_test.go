@@ -91,12 +91,7 @@ func TestExtracClaims(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, claims)
 
-	if claims["lastname"] != "Fernando" {
-		t.Errorf("incorrect value")
-	}
-
-	if claims["firstname"] != "Rafael" {
-		t.Errorf("incorrect value")
-	}
+	assert.Equal(t, claims["lastname"], "Fernando")
+	assert.Equal(t, claims["firstname"], "Rafael")
 
 }
