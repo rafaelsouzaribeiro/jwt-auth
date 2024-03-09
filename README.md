@@ -2,11 +2,7 @@
 <strong>Added ExtractClaims method</strong><br /> 
  ```go
 
-	cre, err := authjwt.NewCredential(1, "secretkey", nil)
-
-	if err != nil {
-		panic(err)
-	}
+	cre := authjwt.Credential{}
 
 	claims, err = cre.ExtractClaims(token)
 
@@ -32,11 +28,7 @@ import (
 func main() {
 
 	mx := http.NewServeMux()
-	cre, err := authjwt.NewCredential(3600, "secretkey", nil)
-
-	if err != nil {
-		panic(err)
-	}
+	cre := authjwt.Credential{}
 
 	// Protected routes
 	mx.HandleFunc("/route1", cre.AuthMiddleware(rota1Handler))
