@@ -1,4 +1,4 @@
-module github.com/rafaelsouzaribeiro/auth-jwt
+module github.com/rafaelsouzaribeiro/jwt-auth
 
 go 1.21.4
 
