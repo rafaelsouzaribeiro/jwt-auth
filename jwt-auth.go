@@ -1,4 +1,4 @@
-package authjwt
+package jwtauth
 
 import (
 	"context"
