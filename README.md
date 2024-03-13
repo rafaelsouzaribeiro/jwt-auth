@@ -10,7 +10,7 @@ update repository name from auth-jwt to jwt-auth
 <strong>Added ExtractClaims method</strong><br /> 
  ```go
 
-	cre, err := authjwt.NewCredential(1, "secretkey", nil)
+	cre, err := jwtauth.NewCredential(1, "secretkey", nil)
 
 	if err != nil {
 		panic(err)
@@ -34,13 +34,13 @@ import (
 	"fmt"
 	"net/http"
 
-	authjwt "github.com/rafaelsouzaribeiro/auth-jwt"
+	jwtauth "github.com/rafaelsouzaribeiro/jwt-auth"
 )
 
 func main() {
 
 	mx := http.NewServeMux()
-	cre, err := authjwt.NewCredential(3600, "secretkey", nil)
+	cre, err := jwtauth.NewCredential(3600, "secretkey", nil)
 
 	if err != nil {
 		panic(err)
@@ -88,7 +88,7 @@ func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
 <strong>How to create a token?</strong><br />
 
   ```go 
-	cre, err := authjwt.NewCredential(3600, secretkey, nil)
+	cre, err := jwtauth.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
 		panic(err)
@@ -105,7 +105,7 @@ func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
 <strong>This example takes Bearer Token Authentication and skips token validation for functions login,loginAdm</strong><br />  
 
   ```go 
-	c, errs := authjwt.NewCredential(3600, secretkey, []string{"login", "loginAdm"})
+	c, errs := jwtauth.NewCredential(3600, secretkey, []string{"login", "loginAdm"})
 
 	if err != nil {
 		panic(errs)
@@ -119,7 +119,7 @@ func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
 <strong>How to add an interceptor in grpc? passing the token as a parameter</strong><br />   
 
   ```go
-	cre, err := authjwt.NewCredential(3600, secretkey, nil)
+	cre, err := jwtauth.NewCredential(3600, secretkey, nil)
 
 	if err != nil {
 		return "", err
