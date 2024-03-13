@@ -1,3 +1,11 @@
+
+
+<strong>Version: v1.14.0</strong><br />
+<strong>update repository name</strong><br /> 
+<p>
+update repository name from auth-jwt to jwt-auth
+</p>
+
 <strong>Version: v1.13.0</strong><br />
 <strong>Added ExtractClaims method</strong><br /> 
  ```go
