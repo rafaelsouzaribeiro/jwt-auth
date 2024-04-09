@@ -1,14 +1,14 @@
 
 
 <strong>Version: v1.14.0</strong><br />
-<strong>Added ExtractClaims method</strong><br /> 
+<strong>ExtractClaims method</strong><br /> 
  ```go
 
 	cre, err := jwtauth.NewCredential(1, "secretkey", nil)
 
 	if err != nil {
 		panic(err)
-	}
+	}	
 
 	claims, err = cre.ExtractClaims(token)
 
@@ -18,7 +18,18 @@
 
 	println(fmt.Sprint(claims["lastname"]), fmt.Sprint(claims["firstname"]))
 ```
+<br /> 
+<strong>CreateToken</strong><br />
+	
+```go 	
+	// pass multiple data
+	claims := map[string]interface{}{
+		"username": username,
+		 // ... other claims
+	}
 
+	token, err := cre.CreateToken(claims)
+```
 
 <strong>Methods for http getting the bearer token and validating</strong><br />      
 
@@ -66,20 +77,7 @@ func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
 
 ```
 
-
-<strong>CreateToken</strong><br />
-	
-```go 	
-	// pass multiple data
-	claims := map[string]interface{}{
-		"username": username,
-		 // ... other claims
-	}
-
-	token, err := cre.CreateToken(claims)
-```
-
-
+<br/>
 <strong>How to add an interceptor in grpc?</strong><br />  
 <strong>This example takes Bearer Token Authentication and skips token validation for functions login,loginAdm</strong><br />  
 
