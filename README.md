@@ -104,7 +104,12 @@ func rotaPublicaHandler(w http.ResponseWriter, r *http.Request) {
 		return "", err
 	}
 
-	token, err := cre.CreateToken(username)
+	claims := map[string]interface{}{
+		"username": username,
+		 // ... other claims
+	}
+
+	token, err := cre.CreateToken(claims)
 
 	if err != nil {
 		return "", err
