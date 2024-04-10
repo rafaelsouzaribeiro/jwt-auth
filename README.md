@@ -1,5 +1,8 @@
 <strong>Version: v1.15.0</strong><br />
 <strong>Updating folder: pkg/middleware</strong><br /> 
+ ```go
+import jwtauth "github.com/rafaelsouzaribeiro/jwt-auth/pkg/middleware"
+ ```
 
 <strong>Version: v1.14.0</strong><br />
 <strong>ExtractClaims method</strong><br /> 
@@ -37,6 +40,12 @@
   ```go
  package main
 
+import (
+	"fmt"
+	"net/http"
+
+	jwtauth "github.com/rafaelsouzaribeiro/jwt-auth"
+)
 
 func main() {
 
