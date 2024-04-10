@@ -41,7 +41,7 @@ import (
 	"fmt"
 	"net/http"
 
-	jwtauth "github.com/rafaelsouzaribeiro/jwt-auth"
+	jwtauth "github.com/rafaelsouzaribeiro/jwt-auth/pkg/middleware"
 )
 
 func main() {
