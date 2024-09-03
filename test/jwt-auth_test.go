@@ -1,28 +1,29 @@
-package middleware
+package test
 
 import (
 	"errors"
 	"testing"
 	"time"
 
+	"github.com/rafaelsouzaribeiro/jwt-auth/pkg/middleware"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewCredentialTime(t *testing.T) {
-	c, err := NewCredential(0, "secret", nil)
+	c, err := middleware.NewCredential(0, "secret", nil)
 	assert.Equal(t, errors.New("expiration time must be greater than zero"), err)
 	assert.Nil(t, c)
 
 }
 
 func TestNewCredentialSecret(t *testing.T) {
-	c, err := NewCredential(60, "", nil)
+	c, err := middleware.NewCredential(60, "", nil)
 	assert.Equal(t, errors.New("the secret key cannot be empty"), err)
 	assert.Nil(t, c)
 }
 
 func TestVeridyToken(t *testing.T) {
-	c, err := NewCredential(60, "secret", nil)
+	c, err := middleware.NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
 	claims := map[string]interface{}{
@@ -42,7 +43,7 @@ func TestVeridyToken(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	c, err := NewCredential(60, "secret", nil)
+	c, err := middleware.NewCredential(60, "secret", nil)
 	assert.Nil(t, err)
 
 	claims := map[string]interface{}{
@@ -55,7 +56,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestTokenExpired(t *testing.T) {
-	c, err := NewCredential(3, "secret", nil)
+	c, err := middleware.NewCredential(3, "secret", nil)
 	assert.Nil(t, err)
 
 	claims := map[string]interface{}{
@@ -73,14 +74,13 @@ func TestTokenExpired(t *testing.T) {
 }
 
 func TestExtracClaims(t *testing.T) {
-	cre, err := NewCredential(1, "secretkey", nil)
+	cre, err := middleware.NewCredential(1, "secretkey", nil)
 	assert.Nil(t, err)
 	assert.NotNil(t, cre)
 
 	claims := map[string]interface{}{
 		"lastname":  "Fernando",
 		"firstname": "Rafael",
-		// ... other claims
 	}
 
 	token, err := cre.CreateToken(claims)
