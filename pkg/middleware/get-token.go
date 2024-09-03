@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func GetToken(ctx context.Context) (string, error) {
+func (i *Credential) GetToken(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 
 	if !ok {

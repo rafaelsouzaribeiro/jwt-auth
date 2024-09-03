@@ -10,13 +10,13 @@ import (
 
 func (i *Credential) UnaryInterceptorBearer(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 
-	_, methodName := extractServiceMethod(info.FullMethod)
+	_, methodName := i.ExtractServiceMethod(info.FullMethod)
 
-	if contains(i.DeniedMethods, methodName) {
+	if i.Contains(i.DeniedMethods, methodName) {
 		return handler(ctx, req)
 	}
 
-	token, err := GetToken(ctx)
+	token, err := i.GetToken(ctx)
 
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)

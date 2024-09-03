@@ -8,13 +8,13 @@ import (
 
 func (i *Credential) StreamInterceptorBearer(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 
-	_, methodName := extractServiceMethod(info.FullMethod)
+	_, methodName := i.ExtractServiceMethod(info.FullMethod)
 
-	if contains(i.DeniedMethods, methodName) {
+	if i.Contains(i.DeniedMethods, methodName) {
 		return handler(srv, ss)
 	}
 
-	token, err := GetToken(ss.Context())
+	token, err := i.GetToken(ss.Context())
 
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "invalid token: %v", err)

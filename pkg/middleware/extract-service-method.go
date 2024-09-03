@@ -2,7 +2,7 @@ package middleware
 
 import "strings"
 
-func extractServiceMethod(fullMethod string) (string, string) {
+func (c *Credential) ExtractServiceMethod(fullMethod string) (string, string) {
 	parts := strings.Split(fullMethod, "/")
 
 	if len(parts) != 3 {
