@@ -1,6 +1,13 @@
 <strong>Version: v1.19.0</strong><br />
 <strong>Adding authentication with Gin</strong><br/>
  ```go
+ import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rafaelsouzaribeiro/jwt-auth/pkg/middleware"
+)
+
 router := gin.Default()
 cre, err := middleware.NewCredential(3600, "secretkey", nil)
 
