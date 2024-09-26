@@ -1,5 +1,5 @@
 <strong>Version: v1.19.0</strong><br />
-<strong>Adding authentication with Gin</strong><br/>
+<strong>Adding Bearer authentication with Gin</strong><br/>
  ```go
  import (
 	"net/http"
