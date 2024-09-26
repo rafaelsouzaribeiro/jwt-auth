@@ -1,3 +1,32 @@
+<strong>Version: v1.19.0</strong><br />
+<strong>Adding authentication with Gin</strong><br/>
+ ```go
+router := gin.Default()
+cre, err := middleware.NewCredential(3600, "secretkey", nil)
+
+if err != nil {
+	panic(err)
+}
+
+router.POST("/publish", cre.AuthMiddlewareGin(), func(c *gin.Context) {
+	var json struct {
+		Message string `json:"message"`
+	}
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": json.Message,
+	})
+})
+
+router.Run(":8080")
+ ```
+
 <strong>Version: v1.15.0 or latest</strong><br />
 <strong>Updating folder: pkg/middleware</strong><br /> 
  ```go
@@ -8,7 +37,7 @@ import jwtauth "github.com/rafaelsouzaribeiro/jwt-auth/pkg/middleware"
 <strong>ExtractClaims method</strong><br /> 
  ```go
 
-	cre, err := jwtauth.NewCredential(1, "secretkey", nil)
+	cre, err := jwtauth.NewCredential(3600, "secretkey", nil)
 
 	if err != nil {
 		panic(err)
