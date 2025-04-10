@@ -1,3 +1,20 @@
+<strong>Version: v1.20.0</strong><br />
+<strong>Adding Bearer authentication with Echo</strong><br/>
+```go
+	e := echo.New()
+	cre, err := middleware.NewCredential(3600, "secretkey", nil)
+
+	if err != nil {
+		panic(err)
+
+	}
+
+	e.GET("/protected", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"message": "You are authorized!"})
+	}, cre.AuthMiddlewareEcho)
+	e.Logger.Fatal(e.Start(":1323"))
+```
+
 <strong>Version: v1.19.0</strong><br />
 <strong>Adding Bearer authentication with Gin</strong><br/>
  ```go

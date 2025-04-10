@@ -19,6 +19,12 @@ func (cre *Credential) AuthMiddlewareGin() gin.HandlerFunc {
 			return
 		}
 
+		if cre.TokenExpired(token) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token expired"})
+			c.Abort()
+			return
+		}
+
 		c.Next()
 	}
 }
